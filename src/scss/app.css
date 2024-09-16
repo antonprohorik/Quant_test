@@ -1,0 +1,14 @@
+.main {
+  margin: 20px 0;
+}
+.main td {
+  vertical-align: middle;
+  text-align: center;
+}
+.main .card-img-top {
+  height: 400px;
+  display: block;
+  object-fit: cover;
+}
+
+/*# sourceMappingURL=app.css.map */

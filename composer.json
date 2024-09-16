@@ -1,0 +1,11 @@
+{
+    "name": "portal/portal",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "require": {
+        "larapack/dd": "1.*"
+    }
+}

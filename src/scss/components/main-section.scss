@@ -1,0 +1,14 @@
+.main {
+  margin: 20px 0;
+
+  td {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .card-img-top {
+    height: 400px;
+    display: block;
+    object-fit: cover;
+  }
+}
