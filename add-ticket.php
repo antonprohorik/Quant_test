@@ -21,12 +21,8 @@ if (!isset($_SESSION['user'])) {
             <form action="/тестовое/actions/tickets/store.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="fullNameField" class="form-label">Тема задачи</label>
-                    <input type="text" name="title" class="form-control" id="fullNameField" aria-describedby="emailHelp">
+                    <input type="text" name="title" class="form-control" id="fullNameField" aria-describedby="emailHelp" required>
                 </div>
-                <!-- <div class="mb-3">
-                    <label for="fullNameField" class="form-label">Изображение</label>
-                    <input type="file" name="image" class="form-control" id="fullNameField" aria-describedby="emailHelp">
-                </div> -->
                 <div class="mb-3">
                     <label for="dobField" class="form-label">Описание</label>
                     <textarea name="description" class="form-control" id="dobField" aria-describedby="emailHelp"></textarea>

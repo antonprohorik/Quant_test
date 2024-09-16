@@ -33,13 +33,6 @@
                         </ul>
                     </li>
                             <?php
-                        } 
-                        if ($user && (int)$user['group_id'] == $config['admin_user_group']) {
-                            ?>
-                            <li class="nav-item">
-                            <a href="/тестовое/tickets-control.php" class="nav-link">Управление задачами</a>
-                        </li>
-                            <?php
                         }
                     ?>
                     

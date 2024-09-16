@@ -1,10 +1,14 @@
 <?php
     session_start();
+    if (!isset($_SESSION['user'])) {
+        header('Location: /тестовое/login.php');
+    }
 ?>
 <!doctype html>
 <html lang="ru">
 <head>
      <?php require_once __DIR__ .'/components/head.php'; 
+     $config = require __DIR__ .'/config/app.php';
      ?>
     <title>Главная</title>
 </head>
@@ -23,24 +27,50 @@
                 Сортировать
             </button>
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">по тому</a></li>
-                <li><a class="dropdown-item" href="#">по сему</a></li>
-                <li><a class="dropdown-item" href="#">ага там сям</a></li>
+                <li><a class="dropdown-item" href="?sort=-created_at">С конца</a></li>
+                <li><a class="dropdown-item" href="?sort=created_at">С начала</a></li>
+                <li><a class="dropdown-item" href="?sort=description">По названию</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">сбросить</a></li>
+                <li><a class="dropdown-item" href="?sort=-created_at">Сбросить</a></li>
             </ul>
         </div>
     </div>
+
+
+    <div class="form-check ">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="<?= $config['success_tickets_tag']; ?>">
+  <label class="form-check-label" for="flexRadioDefault1">
+    Выполнена
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="<?= $config['in_progress_tickets_tag']; ?>" checked>
+  <label class="form-check-label" for="flexRadioDefault2">
+    В процессе
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" value="<?= $config['reject_tickets_tag']; ?>" checked>
+  <label class="form-check-label" for="flexRadioDefault3">
+    Не выполнена
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" value="<?= $config['default_tickets_tag']; ?>" checked>
+  <label class="form-check-label" for="flexRadioDefault4">
+    Создана
+  </label>
+</div>
 </div>
         <div class="row">
             <?php
-            if(isset($_GET['q'])) {
-                $q = $db->prepare("SELECT * FROM `tasks` WHERE `title` LIKE :q ORDER BY `id` DESC");
-                $q->execute(['q'=> "%{$_GET['q']}%"]);
-                $tickets = $q->fetchAll(PDO::FETCH_ASSOC);
-            }else {
-            $tickets = $db->query("SELECT * FROM `tasks` ORDER BY `id` DESC")->fetchAll(PDO::FETCH_ASSOC);
-            }
+            $sort = $_GET['sort'] ?? '-created_at';
+            $order = (strpos($sort, '-') === 0) ? 'DESC' : 'ASC';
+            $sort = ltrim($sort, '-');
+            $query = $db->prepare("SELECT * FROM `tasks` WHERE `user_id` = :user_id ORDER BY `{$sort}` {$order}");
+            $query->execute(['user_id' => $_SESSION['user']]);
+            $tickets = $query->fetchAll(PDO::FETCH_ASSOC);
+
 
             if(empty($tickets)) {
                 ?>
