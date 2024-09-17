@@ -26,4 +26,4 @@ if ($ticket['user_id'] != $_SESSION['user'] && (int)$user['group_id'] != $config
 $query = $db->prepare("DELETE FROM `tasks` WHERE `id` = :id");
 $query->execute(['id' => $id]);
 
-header('Location: /тестовое/my-tickets.php');
+ header('Location: /тестовое/my-tickets.php');

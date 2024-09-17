@@ -18,7 +18,7 @@ if (!isset($_SESSION['user'])) {
             <h2 class="display-6 mb-3">Добавить задачу</h2>
         </div>
         <div class="row">
-            <form action="/тестовое/actions/tickets/store.php" method="post" enctype="multipart/form-data">
+            <form action="/тестовое/actions/tickets/add-ticket.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="fullNameField" class="form-label">Тема задачи</label>
                     <input type="text" name="title" class="form-control" id="fullNameField" aria-describedby="emailHelp" required>

@@ -13,6 +13,7 @@
         }
      ?>
     <title>Мои задачи</title>
+    
 </head>
 <body>
 <?php require_once __DIR__ .'/components/header.php'; ?>
@@ -20,6 +21,12 @@
     <div class="container">
         <div class="row">
             <h2 class="display-6 mb-3">Мои задачи</h2>
+            <div class="col text-end">
+                <form action="/тестовое/actions/tickets/remove-all.php" method="post">
+                    <input type="hidden" name="id" value="<?= $ticket['id']; ?>">   
+                    <button type="submit" class="btn btn-danger">Удалить все задачи</button>
+                </form> 
+            </div>
         </div>
         <div class="row">
             <table class="table table-striped">
@@ -82,6 +89,12 @@
                         <button type="submit" class="dropdown-item">Не выполнена</button>
                         </li>
                         </form>  
+                        <li>
+                        <form action="/тестовое/edit-ticket.php" method="get">
+                        <input type="hidden" name="id" value="<?= $ticket['id']; ?>">   
+                        <button type="submit" class="dropdown-item">Редактировать</button>
+                        </form>   
+                        </li>
                         <li>
                         <form action="/тестовое/actions/tickets/remove.php" method="post">
                         <input type="hidden" name="id" value="<?= $ticket['id']; ?>">   
