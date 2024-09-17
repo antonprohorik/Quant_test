@@ -66,4 +66,12 @@ class Task
         $query = $this->db->prepare("DELETE FROM tasks WHERE user_id = :user_id");
         return $query->execute(['user_id' => $userId]);
     }
+	
+   public function getTaskById($taskId, $userId)
+{
+    $query = $this->db->prepare("SELECT * FROM tasks WHERE id = :id AND user_id = :user_id");
+    $query->execute(['id' => $taskId, 'user_id' => $userId]);
+    return $query->fetch(PDO::FETCH_ASSOC);
+}
+
 }
