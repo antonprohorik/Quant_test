@@ -16,16 +16,15 @@ $tag = new Tag($db);
 
 $userId = $_SESSION['user'];
 
-// Получаем список задач и теги
+// Получаем задачи и теги
 $tickets = $task->getTasksByUser($userId);
 $tags = $tag->getAllTags();
-
-require_once 'templates/head.php';
 ?>
 
 <!doctype html>
 <html lang="ru">
 <head>
+    <?php require_once 'templates/head.php'; ?>
     <title>Главная</title>
 </head>
 <body>
@@ -45,18 +44,27 @@ require_once 'templates/head.php';
                     </div>
                 <?php else: ?>
                     <?php foreach ($tickets as $ticket): ?>
+                        <?php
+                        // Получаем информацию о теге
+                        $tagId = $ticket['tag_id'];
+                        $tagInfo = $tag->getTagById($tagId);
+                        ?>
                         <div class="card mb-3">
                             <div class="card-body">
-                                <h5 class="card-title"><?= htmlspecialchars($ticket['title']); ?></h5>
+                                <h5 class="card-title"><?= htmlspecialchars($ticket['title']); ?>
+                                    <span class="badge rounded-pill" style="background: <?= $tagInfo['background']; ?>; color: <?= $tagInfo['color']; ?>">
+                                        <?= htmlspecialchars($tagInfo['label']); ?>
+                                    </span>
+                                </h5>
                                 <p class="card-text"><?= htmlspecialchars($ticket['description']); ?></p>
                                 <p class="card-text"><small class="text-muted">Добавлено: <?= date('d.m.Y H:i', strtotime($ticket['created_at'])); ?></small></p>
+                                <form action="actions/delete-task.php" method="post">
+                                    <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </form>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>
-        </div>
-    </section>
-    <?php require_once 'templates/scripts.php'; ?>
-</body>
-</html>
+       

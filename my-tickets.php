@@ -16,7 +16,7 @@ $tag = new Tag($db);
 
 $userId = $_SESSION['user'];
 
-// Получаем список тегов
+// Получаем теги
 $tags = $tag->getAllTags();
 
 // Логика сортировки
@@ -32,13 +32,12 @@ if (!in_array($sortColumn, $validSortColumns)) {
 // Логика поиска
 $searchQuery = $_GET['q'] ?? '';
 $tickets = $task->getTasksByUser($userId, $sortColumn, $order, $searchQuery);
-
-require_once 'templates/head.php';
 ?>
 
 <!doctype html>
 <html lang="ru">
 <head>
+    <?php require_once 'templates/head.php'; ?>
     <title>Мои задачи</title>
 </head>
 <body>
@@ -54,7 +53,6 @@ require_once 'templates/head.php';
                     </form>
                 </div>
             </div>
-
             <div class="btn-group mb-3">
                 <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Сортировать
@@ -66,7 +64,6 @@ require_once 'templates/head.php';
                     <li><a class="dropdown-item" href="?sort=-title">По названию (Я-А)</a></li>
                 </ul>
             </div>
-
             <div class="row">
                 <?php if (empty($tickets)): ?>
                     <div class="alert alert-warning" role="alert">
@@ -74,19 +71,60 @@ require_once 'templates/head.php';
                     </div>
                 <?php else: ?>
                     <?php foreach ($tickets as $ticket): ?>
+                        <?php
+                        // Получаем информацию о теге
+                        $tagId = $ticket['tag_id'];
+                        $tagInfo = $tag->getTagById($tagId);
+                        ?>
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h5 class="card-title"><?= htmlspecialchars($ticket['title']); ?>
-                                    <span class="badge rounded-pill" style="background-color: <?= $ticket['tag_background']; ?>; color: <?= $ticket['tag_color']; ?>">
-                                        <?= htmlspecialchars($ticket['tag_label']); ?>
+                                    <span class="badge rounded-pill" style="background: <?= $tagInfo['background']; ?>; color: <?= $tagInfo['color']; ?>">
+                                        <?= htmlspecialchars($tagInfo['label']); ?>
                                     </span>
                                 </h5>
                                 <p class="card-text"><?= htmlspecialchars($ticket['description']); ?></p>
                                 <p class="card-text"><small class="text-muted">Добавлено: <?= date('d.m.Y H:i', strtotime($ticket['created_at'])); ?></small></p>
-                                <form action="actions/delete-task.php" method="post">
-                                    <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
-                                    <button type="submit" class="btn btn-danger">Удалить</button>
-                                </form>
+                                <div class="btn-group" role="group">
+                                    <button id="dropdownMenuButton" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Действия
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li>
+                                            <form action="edit-ticket.php" method="get">
+                                                <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                                <button type="submit" class="dropdown-item">Редактировать</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="actions/change-task-status.php" method="post">
+                                                <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                                <input type="hidden" name="tag" value="<?= $config['success_tickets_tag']; ?>">
+                                                <button type="submit" class="dropdown-item">Выполнено</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="actions/change-task-status.php" method="post">
+                                                <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                                <input type="hidden" name="tag" value="<?= $config['in_progress_tickets_tag']; ?>">
+                                                <button type="submit" class="dropdown-item">В процессе</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="actions/change-task-status.php" method="post">
+                                                <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                                <input type="hidden" name="tag" value="<?= $config['reject_tickets_tag']; ?>">
+                                                <button type="submit" class="dropdown-item">Не выполнена</button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="actions/delete-task.php" method="post">
+                                                <input type="hidden" name="id" value="<?= $ticket['id']; ?>">
+                                                <button type="submit" class="dropdown-item text-danger">Удалить</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
