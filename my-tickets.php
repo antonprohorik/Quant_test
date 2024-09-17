@@ -132,6 +132,6 @@ $tickets = $task->getTasksByUser($userId, $sortColumn, $order, $searchQuery);
             </div>
         </div>
     </section>
-    <?php require_once 'templates/scripts.php'; ?>
+    <?php require_once 'templates/script.php'; ?>
 </body>
 </html>
